@@ -7,7 +7,10 @@ const input =(props) =>{
     switch (props.elementtype) {
         case('input'):{
             inputElement=<input {...props.elementconfig}
+                                // placeholder={props.placeholder}
                                 value={props.value}
+                                onChange={props.changed}
+
                                 className={Classes.InputElement}/>;
         }
         break;

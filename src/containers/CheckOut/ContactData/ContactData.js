@@ -103,6 +103,24 @@ class ContactData extends Component {
               } );
 
     }
+    contactDataChangedHandler=(r,id)=>{
+        // this.setState({
+        //
+        // })
+
+        const updatedOrderform = {
+            ...this.state.orderForm
+        }
+        const updatedElement =  {
+            ...updatedOrderform[id]
+        };
+        updatedElement.value = r.target.value;
+        updatedOrderform[id]=updatedElement;
+
+        this.setState({
+            orderForm:updatedOrderform
+        })
+    };
 
     render() {
 
@@ -144,8 +162,10 @@ class ContactData extends Component {
                 {formElementArray.map(formElement=>(
                 <Input elementtype={formElement.config.elementType}
                        elementconfig={formElement.config.elementConfig}
-                       placeholder={formElement.config.elementConfig.placeholder}
-                       key={formElement}/>
+                       // placeholder={formElement.config.elementConfig.placeholder}
+                       key={formElement}
+                       value={formElement.config.value}
+                       changed={(r) => this.contactDataChangedHandler(r,formElement)}/>
                 ))}
                 {/*<Input elementType='input' value='name' elementConfig='text'/>*/}
                 {/*<Input elementType='input' value='email' elementConfig='text'/>*/}
