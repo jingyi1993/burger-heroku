@@ -6,6 +6,7 @@ import  Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/input/input';
 
 class ContactData extends Component {
+
     state= {
         orderForm:{
             name: {
@@ -67,7 +68,7 @@ class ContactData extends Component {
         spinner: false,
 
 
-    }
+    };
 
     OrderHandler = ()=>{
       console.log(this.props);
@@ -102,19 +103,18 @@ class ContactData extends Component {
                   })
               } );
 
-    }
-    contactDataChangedHandler=(r,id)=>{
-        // this.setState({
-        //
-        // })
+    };
 
+    contactDataChangedHandler = (event,id) => {
+
+        // console.log('@@@@', event);
         const updatedOrderform = {
             ...this.state.orderForm
-        }
+        };
         const updatedElement =  {
             ...updatedOrderform[id]
         };
-        updatedElement.value = r.target.value;
+        updatedElement.value = event.target.value;
         updatedOrderform[id]=updatedElement;
 
         this.setState({
@@ -163,9 +163,9 @@ class ContactData extends Component {
                 <Input elementtype={formElement.config.elementType}
                        elementconfig={formElement.config.elementConfig}
                        // placeholder={formElement.config.elementConfig.placeholder}
-                       key={formElement}
+                       key={formElement.id}
                        value={formElement.config.value}
-                       changed={(r) => this.contactDataChangedHandler(r,formElement)}/>
+                       changed={(event) => this.contactDataChangedHandler(event,formElement.id)}/>
                 ))}
                 {/*<Input elementType='input' value='name' elementConfig='text'/>*/}
                 {/*<Input elementType='input' value='email' elementConfig='text'/>*/}
