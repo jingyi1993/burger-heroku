@@ -3,15 +3,67 @@ import Button from '../../../components/UI/Button/Button';
 import Classes from './ContactData.css'
 import axios from '../../../axios';
 import  Spinner from '../../../components/UI/Spinner/Spinner';
+import Input from '../../../components/UI/input/input';
 
 class ContactData extends Component {
     state= {
-        name: '',
-        email:'',
-        address: {
-            street: '' ,
-            postalCode: '',
-        },
+        orderForm:{
+            name: {
+                elementType:'input',
+                elementConfig:{
+                    type:'text',
+                    placeholder: 'your name',
+                },
+                value: '',
+
+            },
+            email:{
+                elementType:'input',
+                elementConfig:{
+                    type:'text',
+                    placeholder: 'your email',
+                },
+                value: '',
+            },
+            street:{
+                elementType:'input',
+                elementConfig:{
+                    type:'text',
+                    placeholder: 'your address',
+                },
+                value: '',
+            },
+            zipcode:{
+                elementType:'input',
+                elementConfig:{
+                    type:'text',
+                    placeholder: 'zipcode',
+                },
+                value: '',
+            },
+            country:{
+                elementType:'input',
+                elementConfig:{
+                    type:'text',
+                    placeholder: 'country',
+                },
+                value: '',
+            },
+            deliveryMethod:{
+                elementType:'select',
+                elementConfig:{
+                    options:[
+                        {value: 'fastest', displayValue:'fastest'},
+                        {value: 'cheapest', displayValue:'cheapest'}
+                    ],
+                    type:'text',
+                    placeholder: 'your name',
+                },
+                value: '',
+            }
+
+            },
+
         spinner: false,
 
 
@@ -53,24 +105,66 @@ class ContactData extends Component {
     }
 
     render() {
+
+        const formElementArray =[];
+        for(let key in this.state.orderForm){
+            //[id: name, config: {
+            //
+            //                 elementType:'input',
+            //                 elementConfig:{
+            //                     type:'text',
+            //                     placeholder: 'your name',
+            //                 },
+            //                 value: '',
+            //
+            //            }]
+
+            // deliveryMethod:{
+            //                 elementType:'select',
+            //                 elementConfig:{
+            //                     options:[
+            //                         {value: 'fastest', displayValue:'fastest'},
+            //                         {value: 'cheapest', displayValue:'cheapest'}
+            //                     ],
+            //                     type:'text',
+            //                     placeholder: 'your name',
+            //                 },
+            //                 value: '',
+            //             }
+            formElementArray.push({
+                id:key,
+                config: this.state.orderForm[key],
+
+            })
+        }
+
         let form =(
             <form className={Classes.ContactData}>
-                <input type="text" name='name' placeholder='your name'/>
-                <input type='text' name='email' placeholder='your email'/>
-                <input type="text" name='street' placeholder='street'/>
-                <input type="text" name='postalcode' placeholder='your postalcoed'/>
+
+                {formElementArray.map(formElement=>(
+                <Input elementtype={formElement.config.elementType}
+                       elementconfig={formElement.config.elementConfig}
+                       placeholder={formElement.config.elementConfig.placeholder}
+                       key={formElement}/>
+                ))}
+                {/*<Input elementType='input' value='name' elementConfig='text'/>*/}
+                {/*<Input elementType='input' value='email' elementConfig='text'/>*/}
+                {/*<Input elementType='input' value='street' elementConfig='text'/>*/}
+                {/*<Input elementType='input' value='country' elementConfig='text'/>*/}
+
+                <Button btnType='Success' clicked={this.OrderHandler}>Order</Button>
             </form>
-        )
+        );
 
         if(this.state.spinner) {
                form=(<Spinner/>);
         }
         return (
             <div>
-              <h4>Enter your contact data</h4>
+              <h4 className={Classes.Title}>Enter your contact data</h4>
                 {form}
 
-                <Button btnType='Success' clicked={this.OrderHandler}>Order</Button>
+
             </div>
         )
     }
