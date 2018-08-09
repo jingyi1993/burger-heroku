@@ -16,7 +16,12 @@ class ContactData extends Component {
                     placeholder: 'your name',
                 },
                 value: '',
+                validation:{
+                    required: true,
+                    minLength:  3 ,
 
+                },
+                valid: false
             },
             email:{
                 elementType:'input',
@@ -25,6 +30,11 @@ class ContactData extends Component {
                     placeholder: 'your email',
                 },
                 value: '',
+                validation:{
+                    required: true,
+
+                },
+                valid: false
             },
             street:{
                 elementType:'input',
@@ -33,6 +43,11 @@ class ContactData extends Component {
                     placeholder: 'your address',
                 },
                 value: '',
+                validation:{
+                    required: true,
+
+                },
+                valid: false
             },
             zipcode:{
                 elementType:'input',
@@ -41,6 +56,12 @@ class ContactData extends Component {
                     placeholder: 'zipcode',
                 },
                 value: '',
+                validation:{
+                    required: true,
+                    length: 6
+
+                },
+                valid: false
             },
             country:{
                 elementType:'input',
@@ -49,6 +70,11 @@ class ContactData extends Component {
                     placeholder: 'country',
                 },
                 value: '',
+                validation:{
+                    required: true,
+
+                },
+                valid: false
             },
             deliveryMethod:{
                 elementType:'select',
@@ -61,6 +87,7 @@ class ContactData extends Component {
                     placeholder: 'your name',
                 },
                 value: '',
+                valid: false
             }
 
             },
@@ -69,6 +96,29 @@ class ContactData extends Component {
 
 
     };
+
+    checkValidity(value,rules){
+        //value: inputValue, rules:this.state.orderForm[key].validation
+
+        let isValid = true;
+
+        if(rules.required) {
+            isValid = value.trim !== '';
+        }
+        if(rules.minLength) {
+            isValid = value.length >= rules.minLength;
+        }
+        if(rules.length) {
+            isValid = value.length == rules.length ;
+        }
+
+        console.log('valid的结果是：',isValid);
+
+        return isValid
+
+
+
+    }
 
     OrderHandler = ()=>{
       console.log(this.props);
@@ -79,12 +129,24 @@ class ContactData extends Component {
         // const order ={
         //    price: this.state.price
         // };
+
+        const formData = {};
+        //name, email, address,...
+        for(let orderFormKey in this.state.orderForm){
+          //{name: 'jingyi', email: '47238', address: '1833',...}
+            formData[orderFormKey] = this.state.orderForm[orderFormKey].value;
+        }
+
+
+
+
           const order = {
               ingredients: this.props.ingredients,
               price: this.props.price,
-              address: '1833 riverside'
+              formData: formData,
 
           };
+        console.log('@@@@',order.formData);
 
           axios.post( '/orders.json', order )
               .then( response => {
@@ -106,8 +168,63 @@ class ContactData extends Component {
     };
 
     contactDataChangedHandler = (event,id) => {
+        //  orderForm:{
+        //             name: {
+        //                 elementType:'input',
+        //                 elementConfig:{
+        //                     type:'text',
+        //                     placeholder: 'your name',
+        //                 },
+        //                 value: '',
+        //
+        //             },
+        //             email:{
+        //                 elementType:'input',
+        //                 elementConfig:{
+        //                     type:'text',
+        //                     placeholder: 'your email',
+        //                 },
+        //                 value: '',
+        //             },
+        //             street:{
+        //                 elementType:'input',
+        //                 elementConfig:{
+        //                     type:'text',
+        //                     placeholder: 'your address',
+        //                 },
+        //                 value: '',
+        //             },
+        //             zipcode:{
+        //                 elementType:'input',
+        //                 elementConfig:{
+        //                     type:'text',
+        //                     placeholder: 'zipcode',
+        //                 },
+        //                 value: '',
+        //             },
+        //             country:{
+        //                 elementType:'input',
+        //                 elementConfig:{
+        //                     type:'text',
+        //                     placeholder: 'country',
+        //                 },
+        //                 value: '',
+        //             },
+        //             deliveryMethod:{
+        //                 elementType:'select',
+        //                 elementConfig:{
+        //                     options:[
+        //                         {value: 'fastest', displayValue:'fastest'},
+        //                         {value: 'cheapest', displayValue:'cheapest'}
+        //                     ],
+        //                     type:'text',
+        //                     placeholder: '',
+        //                 },
+        //                 value: '',
+        //             }
+        //
+        //             },
 
-        // console.log('@@@@', event);
         const updatedOrderform = {
             ...this.state.orderForm
         };
@@ -115,6 +232,22 @@ class ContactData extends Component {
             ...updatedOrderform[id]
         };
         updatedElement.value = event.target.value;
+
+            //       name: {
+            //                 elementType:'input',
+            //                 elementConfig:{
+            //                     type:'text',
+            //                     placeholder: 'your name',
+            //                 },
+            //                 value: '',
+            //                 valid: false,
+            //                 validation:{
+            //                            required: true},
+            //
+            //             },
+                   //返回isValid给 updatedElement.valid
+        updatedElement.valid = this.checkValidity(updatedElement.value, updatedElement.validation);
+        console.log('valid的结果是：',updatedElement);
         updatedOrderform[id]=updatedElement;
 
         this.setState({
@@ -165,7 +298,8 @@ class ContactData extends Component {
                        // placeholder={formElement.config.elementConfig.placeholder}
                        key={formElement.id}
                        value={formElement.config.value}
-                       changed={(event) => this.contactDataChangedHandler(event,formElement.id)}/>
+                       changed={(event) => this.contactDataChangedHandler(event,formElement.id)}
+                       isValid={formElement.config.valid}/>
                 ))}
                 {/*<Input elementType='input' value='name' elementConfig='text'/>*/}
                 {/*<Input elementType='input' value='email' elementConfig='text'/>*/}

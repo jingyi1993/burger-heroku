@@ -21,3 +21,8 @@
     box-sizing: border-box;
 
 }
+
+.invalidInputElement {
+    background-color: pink;
+    border: 2px solid red;
+}
