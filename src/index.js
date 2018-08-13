@@ -6,9 +6,10 @@ import registerServiceWorker from './registerServiceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
-import reducer from './store/reducer';
+import burgerBuilder from './store/reducer/BurgerBuilder';
 
-const store = createStore(reducer);
+const store = createStore(burgerBuilder,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 
 const app= (

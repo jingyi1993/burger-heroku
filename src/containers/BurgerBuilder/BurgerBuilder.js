@@ -8,7 +8,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import {connect} from 'react-redux';
 
-import * as actionTypes from '../../store/actions';
+import * as BurgerBuilderActions from '../../store/actions/index';
 
 
 
@@ -68,17 +68,14 @@ class BurgerBuilder extends Component{
         //     .then(response=>console.log(response))
         //     // .catch(error=>console.log(error));
         const queryParas =[];
-        for (let i in this.state.ingredients) {
-            queryParas.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
-        };
-        queryParas.push('price=' + this.props.price);
+        // for (let i in this.state.ingredients) {
+        //     queryParas.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
+        // };
+        // queryParas.push('price=' + this.props.price);
+        //
+        // const queryString =queryParas.join('&');
 
-        const queryString =queryParas.join('&');
-
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
-        })
+        this.props.history.push('/checkout')
 
     };
 
@@ -158,6 +155,9 @@ class BurgerBuilder extends Component{
         })
     };
     render(){
+
+        console.log('@@@@',this.props.purchasable);
+        console.log('@@@@',this.props.price);
         const disabledInfo={...this.props.ingredients};
         for(let key in disabledInfo){
             disabledInfo[key]=disabledInfo[key]<=0;
@@ -189,7 +189,7 @@ class BurgerBuilder extends Component{
                 ingredientRemoved={this.props.onIngredientsRemoved}
                 disabledInfo={disabledInfo}
                 price={this.props.price}
-                purchasable={this.state.purchasable}
+                purchasable={this.props.purchasable}
                 ordered= {this.purchaseHandler}/>
 
             </Aux>
@@ -200,14 +200,15 @@ class BurgerBuilder extends Component{
 const mapStateToProps =state =>{
     return {
         ingredients:state.ingredients,
-        price: state.price
+        price: state.price,
+        purchasable: state.purchasable,
     }
 };
 
 const mapDispatchToProps =dispatch =>{
     return {
-        onIngredientsAdded :(ingName)=>dispatch({type: actionTypes.ADD_INGREDIENTS,ingredientsName: ingName}),
-        onIngredientsRemoved :(ingName)=>dispatch({type: actionTypes.REMOVE_INGREDIENTS,ingredientsName: ingName})
+        onIngredientsAdded :(ingName)=>dispatch(BurgerBuilderActions.addIngredient(ingName)),
+        onIngredientsRemoved :(ingName)=>dispatch(BurgerBuilderActions.removeIngredient(ingName)),
     }
 };
 
